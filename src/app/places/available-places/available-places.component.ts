@@ -14,14 +14,19 @@ import { PlacesContainerComponent } from '../places-container/places-container.c
 })
 export class AvailablePlacesComponent implements OnInit {
   places = signal<Place[] | undefined>(undefined);
+  isFetching = signal(false);
   private httpClient = inject(HttpClient)
 
   ngOnInit() {
-    this.httpClient.get<{places: Place[]}>('http://localhost:3000/places')
+    this.isFetching.set(true);
+    this.httpClient.get<{ places: Place[] }>('http://localhost:3000/places')
       .subscribe({
         next: (data) => {
           console.log('places', data.places);
           this.places.set(data.places);
+        },
+        complete: () => {
+          this.isFetching.set(false);
         }
       });
   }
