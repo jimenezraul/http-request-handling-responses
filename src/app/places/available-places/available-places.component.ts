@@ -13,7 +13,7 @@ import { PlacesService } from '../places.service';
   imports: [PlacesComponent, PlacesContainerComponent],
 })
 export class AvailablePlacesComponent implements OnInit {
-  places = signal<Place[] | undefined>(undefined);
+  places = signal<Place[]>([]);
   isFetching = signal(false);
   private destroyRef = inject(DestroyRef);
 
@@ -23,7 +23,6 @@ export class AvailablePlacesComponent implements OnInit {
     this.isFetching.set(true);
     const subscription = this.placeService.loadAvailablePlaces().subscribe({
       next: (places) => {
-        console.log('places', places);
         this.places.set(places);
       },
       complete: () => {
